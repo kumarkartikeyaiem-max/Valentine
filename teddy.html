@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Teddy Day ❤️</title>
+
+  <style>
+    body {
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      color: white;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.18);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      max-width: 90%;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.3em;
+    }
+
+    .emoji {
+      font-size: 4em;
+      animation: beat 1s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Photo Style */
+    .photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 15px auto 20px;
+      border: 4px solid rgba(255,255,255,0.7);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      display: block;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 22px;
+      border-radius: 25px;
+      border: none;
+      font-size: 1em;
+      background: white;
+      color: #ff4b6e;
+      cursor: pointer;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-style: italic;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="emoji">🧸</div>
+
+    <h1>Happy Teddy Day</h1>
+
+    <!-- Small Photo -->
+    <img 
+  src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/my_wife.jpg"
+  alt="My Love"
+  class="photo"
+  onerror="this.style.display='none'"
+>
+
+
+    <p>On this day, I feel like stuffing you<br> in my arms and never letting go. 💕</p>
+
+    <!-- Romantic Music -->
+    
+<audio id="music" loop>
+  <source src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/tum_hi_ho.mp3" type="audio/mpeg">
+</audio>
+
+    <button onclick="playMusic(this)">
+      ▶ Touch Me
+    </button>
+
+    <div class="footer">
+      With love,<br><strong>Your husband 💖</strong>
+    </div>
+  </div>
+
+  <script>
+    function playMusic(btn) {
+      const music = document.getElementById("music");
+      music.play();
+      btn.innerText = "🎵 Playing...";
+    }
+  </script>
+</body>
+</html>
