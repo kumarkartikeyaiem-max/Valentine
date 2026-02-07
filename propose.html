@@ -15,6 +15,7 @@
       align-items: center;
       justify-content: center;
       margin: 0;
+      overflow: hidden;
     }
 
     .card {
@@ -23,16 +24,12 @@
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       max-width: 90%;
+      position: relative;
+      z-index: 2;
     }
 
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 1.3em;
-    }
+    h1 { font-size: 2.5em; margin-bottom: 10px; }
+    p { font-size: 1.3em; }
 
     .emoji {
       font-size: 4em;
@@ -40,82 +37,235 @@
     }
 
     @keyframes beat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.2);}
     }
 
-    /* Photo Style */
+    /* PHOTO */
+    .photo-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 20px auto;
+      cursor: pointer;
+    }
+
     .photo {
       width: 120px;
       height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      margin: 15px auto 20px;
       border: 4px solid rgba(255,255,255,0.7);
       box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      margin: auto;
       display: block;
+      animation: heartbeat 1.2s infinite;
     }
 
+    @keyframes heartbeat {
+      0%{transform:scale(1);}
+      30%{transform:scale(1.12);}
+      60%{transform:scale(1);}
+      100%{transform:scale(1);}
+    }
+
+    /* HALO */
+    .halo {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      animation: haloGlow 2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes haloGlow {
+      0%{box-shadow:0 0 10px #fff,0 0 20px #ff69b4;}
+      50%{box-shadow:0 0 30px #fff,0 0 50px #ff1493;}
+      100%{box-shadow:0 0 10px #fff,0 0 20px #ff69b4;}
+    }
+
+    /* 🎵 PLAY BUTTON ANIMATION */
     button {
       margin-top: 20px;
-      padding: 10px 22px;
-      border-radius: 25px;
+      padding: 12px 26px;
+      border-radius: 30px;
       border: none;
-      font-size: 1em;
+      font-size: 1.1em;
       background: white;
       color: #ff4b6e;
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      animation: pulseGlow 2s infinite;
+      transition: transform 0.2s ease;
     }
 
-    .footer {
-      margin-top: 25px;
-      font-style: italic;
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 rgba(255,255,255,0.6); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.9); }
+      100% { box-shadow: 0 0 0 rgba(255,255,255,0.6); }
+    }
+
+    button:active {
+      transform: scale(0.92);
+    }
+
+    /* Ripple */
+    button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      border: 2px solid rgba(255,255,255,0.6);
+      opacity: 0;
+      animation: ripple 2s infinite;
+    }
+
+    @keyframes ripple {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    /* Playing State */
+    button.playing {
+      background: linear-gradient(45deg, #ff4b6e, #ff85a2);
+      color: white;
+      animation: playingWave 1.5s infinite;
+    }
+
+    @keyframes playingWave {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+      100% { transform: translateY(0); }
+    }
+
+    .footer { margin-top: 25px; font-style: italic; }
+
+    /* FALLING ITEMS */
+    .fall {
+      position: fixed;
+      top: -50px;
+      animation: fall linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    /* HEART BURST */
+    .burst {
+      position: fixed;
+      animation: burst 1.2s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes burst {
+      0% { transform: scale(0) translate(0,0); opacity:1; }
+      100% { transform: scale(1.5) translate(var(--x), var(--y)); opacity:0; }
+    }
+
+    /* FIREWORK */
+    .firework {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: explode 1.5s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes explode {
+      from { transform: scale(1); opacity:1; }
+      to { transform: translate(var(--x),var(--y)) scale(0); opacity:0; }
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <div class="emoji">💍</div>
 
-    <h1>Happy Propose Day</h1>
+<script>
+  /* FALLING HEARTS & ROSES */
+  const fallItems = ["💖","💗","🌹","🌸"];
+  setInterval(()=>{
+    const el=document.createElement("div");
+    el.className="fall";
+    el.innerText=fallItems[Math.floor(Math.random()*fallItems.length)];
+    el.style.left=Math.random()*100+"vw";
+    el.style.fontSize=18+Math.random()*20+"px";
+    el.style.animationDuration=6+Math.random()*6+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),12000);
+  },350);
 
-    <!-- Small Photo -->
-    <img 
-  src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/my_wife.jpg"
-  alt="My Love"
-  class="photo"
-  onerror="this.style.display='none'"
->
+  /* HEART BURST */
+  function heartBurst(x,y){
+    const hearts=["💖","💗","💘","💓"];
+    for(let i=0;i<18;i++){
+      const h=document.createElement("div");
+      h.className="burst";
+      h.innerText=hearts[Math.floor(Math.random()*hearts.length)];
+      h.style.left=x+"px";
+      h.style.top=y+"px";
+      h.style.fontSize="20px";
+      h.style.setProperty("--x",(Math.random()*200-100)+"px");
+      h.style.setProperty("--y",(Math.random()*200-100)+"px");
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1200);
+    }
+  }
 
+  /* FIREWORKS */
+  function fireworks(){
+    for(let i=0;i<30;i++){
+      const f=document.createElement("div");
+      f.className="firework";
+      f.style.left=50+Math.random()*30+"vw";
+      f.style.top=20+Math.random()*30+"vh";
+      f.style.background=`hsl(${Math.random()*360},100%,70%)`;
+      f.style.setProperty("--x",(Math.random()*300-150)+"px");
+      f.style.setProperty("--y",(Math.random()*300-150)+"px");
+      document.body.appendChild(f);
+      setTimeout(()=>f.remove(),1500);
+    }
+  }
+</script>
 
-    <p>Every moment with you feels like poetry<br>let me be the line that completes<br> the verse of your life forever. 💕</p>
+<div class="card">
+  <div class="emoji">💍</div>
+  <h1>Happy Propose Day</h1>
 
-    <!-- Romantic Music -->
-    
-<audio id="music" loop>
-  <source src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/tum_hi_ho.mp3" type="audio/mpeg">
-</audio>
-
-    <button onclick="playMusic(this)">
-      ▶ Touch Me
-    </button>
-
-    <div class="footer">
-      With love,<br><strong>Your husband 💖</strong>
-    </div>
+  <div class="photo-wrapper" onclick="heartBurst(event.clientX,event.clientY)">
+    <div class="halo"></div>
+    <img src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/my_wife.jpg"
+         class="photo" alt="My Love">
   </div>
 
-  <script>
-    function playMusic(btn) {
-      const music = document.getElementById("music");
-      music.play();
-      btn.innerText = "🎵 Playing...";
-    }
-  </script>
+  <p>
+    Every moment with you feels like poetry<br>
+    let me be the line that completes<br>
+    the verse of your life forever. 💕
+  </p>
+
+  <audio id="music" loop>
+    <source src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/tum_hi_ho.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="playBtn" onclick="playMusic(this)">▶ Touch Me</button>
+
+  <div class="footer">
+    With love,<br><strong>Your husband 💖</strong>
+  </div>
+</div>
+
+<script>
+  function playMusic(btn){
+    document.getElementById("music").play();
+    fireworks(); fireworks();
+    btn.classList.add("playing");
+    btn.innerText="🎵 Playing...";
+  }
+</script>
+
 </body>
-
 </html>
-
-
-
