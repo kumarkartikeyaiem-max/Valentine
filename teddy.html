@@ -15,6 +15,7 @@
       align-items: center;
       justify-content: center;
       margin: 0;
+      overflow: hidden;
     }
 
     .card {
@@ -23,6 +24,8 @@
       border-radius: 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       max-width: 90%;
+      position: relative;
+      z-index: 2;
     }
 
     h1 {
@@ -44,78 +47,180 @@
       50% { transform: scale(1.2); }
     }
 
-    /* Photo Style */
+    /* PHOTO ANIMATION */
     .photo {
-      width: 120px;
-      height: 120px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       object-fit: cover;
-      margin: 15px auto 20px;
-      border: 4px solid rgba(255,255,255,0.7);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+      margin: 18px auto 20px;
+      border: 4px solid rgba(255,255,255,0.8);
+      box-shadow: 0 0 25px rgba(255,182,193,0.9);
       display: block;
+      animation: floatPhoto 4s ease-in-out infinite;
+      transition: transform 0.4s ease;
     }
 
+    .photo:hover {
+      transform: scale(1.15);
+    }
+
+    @keyframes floatPhoto {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* BUTTON */
     button {
       margin-top: 20px;
-      padding: 10px 22px;
-      border-radius: 25px;
+      padding: 12px 26px;
+      border-radius: 30px;
       border: none;
-      font-size: 1em;
+      font-size: 1.1em;
       background: white;
-      color: #ff4b6e;
+      color: #8B0000;
       cursor: pointer;
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.9); }
+      100% { box-shadow: 0 0 0 rgba(255,255,255,0.4); }
+    }
+
+    button.playing {
+      background: linear-gradient(45deg, #8B0000, #CD5C5C);
+      color: white;
     }
 
     .footer {
       margin-top: 25px;
       font-style: italic;
     }
+
+    /* FALLING ITEMS */
+    .fall {
+      position: fixed;
+      top: -40px;
+      z-index: 1;
+      animation: fall linear infinite;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
+    }
+
+    /* FIREWORKS */
+    .firework {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: explode 1.6s ease-out forwards;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    @keyframes explode {
+      to {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <div class="emoji">🧸</div>
 
-    <h1>Happy Teddy Day <br> My Teddy Bear</h1>
+<script>
+  /* 🧸 DIFFERENT TEDDIES + FLOWERS */
+  const fallingItems = [
+    "🧸","🧸","🧸",
+    "🐻","🐻‍❄️",
+    "🧸💖","🧸🎀",
+    "🌹","🌺","🌼","🌷","💐"
+  ];
 
-    <!-- Small Photo -->
-    <img 
-  src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/my_wife.jpg"
-  alt="My Love"
-  class="photo"
-  onerror="this.style.display='none'"
->
+  function createFall() {
+    const el = document.createElement("div");
+    el.className = "fall";
+    el.innerText = fallingItems[Math.floor(Math.random() * fallingItems.length)];
 
+    el.style.left = Math.random() * 100 + "vw";
+    el.style.fontSize = 20 + Math.random() * 30 + "px";
+    el.style.animationDuration = 6 + Math.random() * 6 + "s";
 
-    <p>On this day, I feel like stuffing you in <br> my arms and never letting go. 💕</p>
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 12000);
+  }
 
-    <!-- Romantic Music -->
-    
-<audio id="music" loop>
-  <source src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/simroon_tera_naam.mp3" type="audio/mpeg">
-</audio>
+  setInterval(createFall, 280);
 
-    <button onclick="playMusic(this)">
-      ▶ Touch Me
-    </button>
-
-    <div class="footer">
-      With love,<br><strong>Your husband 💖</strong>
-    </div>
-  </div>
-
-  <script>
-    function playMusic(btn) {
-      const music = document.getElementById("music");
-      music.play();
-      btn.innerText = "🎵 Playing...";
+  /* FIREWORKS */
+  function fireworks() {
+    for (let i = 0; i < 35; i++) {
+      const f = document.createElement("div");
+      f.className = "firework";
+      f.style.left = 40 + Math.random() * 40 + "vw";
+      f.style.top = 20 + Math.random() * 40 + "vh";
+      f.style.background = `hsl(${Math.random() * 360},100%,70%)`;
+      f.style.setProperty("--x", (Math.random() * 300 - 150) + "px");
+      f.style.setProperty("--y", (Math.random() * 300 - 150) + "px");
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 1600);
     }
-  </script>
+  }
+</script>
+
+<div class="card">
+  <div class="emoji">🧸</div>
+
+  <h1>Happy Teddy Day<br>My Teddy Bear</h1>
+
+  <img
+    src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/my_wife.jpg"
+    alt="My Love"
+    class="photo"
+    onerror="this.style.display='none'"
+  >
+
+  <p>
+    On this day, I feel like stuffing you<br>
+    in my arms and never letting go 💕
+  </p>
+
+  <audio id="music">
+    <source src="https://raw.githubusercontent.com/kumarkartikeyaiem-max/Valentine/main/simroon_tera_naam.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="playBtn" onclick="playMusic(this)">
+    ▶ Touch Me
+  </button>
+
+  <div class="footer">
+    With love,<br><strong>Your husband 💖</strong>
+  </div>
+</div>
+
+<script>
+  function playMusic(btn) {
+    const music = document.getElementById("music");
+    music.play();
+    btn.classList.add("playing");
+    btn.innerText = "🎵 Playing...";
+
+    music.onended = () => {
+      fireworks();
+      setTimeout(fireworks, 800);
+      setTimeout(fireworks, 1600);
+    };
+  }
+</script>
+
 </body>
-
 </html>
-
-
-
